@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+GRAY='\033[1;30m'
+BLUE='\033[1;36m'
+NC='\033[0m'
+
+if [ $# -eq 0 ];
+then
+	echo 'Current tmux sessions'
+	printf ${GRAY}
+	tmux ls
+	printf "${NC}\n"
+	printf 'Enter the name of the new or existing session: '
+	read tmux_session
+;else
+	tmux_session=${1}
+;fi
+
+printf "Connect to ${BLUE}${tmux_session}${NC}\n\n"
+
+if tmux has-session -t ${tmux_session:-default} &>/dev/null
+	then tmux -CC attach -d -t ${tmux_session:-default}
+	else tmux -CC new -s ${tmux_session:-default}
+fi
